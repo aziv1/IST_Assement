@@ -1,0 +1,43 @@
+import tensorflow as tf
+import cv2
+import numpy as np
+
+#Load the Model
+model = tf.keras.models.load_model("Model.h5")
+
+#print(model.summary())
+
+#Preprocessing
+def preprocess_image(image):
+    resized_img = tf.image.resize(image, (150, 150))
+    normalized_img = resized_img / 255.0
+    input_img = tf.expand_dims(normalized_img, axis=0)
+    return input_img
+
+# Example function to read image using OpenCV
+def read_image(file_path):
+    img = cv2.imread(file_path)
+    # OpenCV loads images as BGR, convert it to RGB
+    img_rgb = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
+    return img_rgb
+
+def detect(image, model):
+    # Preprocess the image
+    input_img = preprocess_image(image)
+    
+    # Perform inference
+    predictions = model.predict(input_img)
+
+    print(predictions)
+    
+    detected_class_index = np.argmax(predictions)
+    #All ints means unkown Classes
+    class_names = ["Mango", "2", "3", "4", "5", "Lemon", "Orange", "8", "9", "10", "11", "12", "13", "14", "15"]
+    detected_class = class_names[detected_class_index]
+
+    print(f"Detected: {detected_class}")
+
+# Example usage
+image_path = 'Mango.png'
+image = read_image(image_path)
+detect(image, model)
