@@ -1,6 +1,7 @@
 import tensorflow as tf
 import cv2
 import numpy as np
+import time
 
 # Load the Model
 model = tf.keras.models.load_model("Model.h5")
@@ -16,6 +17,7 @@ def preprocess_image(image):
 def read_from_webcam():
     cap = cv2.VideoCapture(0)  # Open the webcam (change the number based on your camera setup)
     while True:
+        start = time.time()
         ret, frame = cap.read()  # Read a frame from the webcam
         if not ret:
             print("Failed to grab frame")
@@ -30,6 +32,8 @@ def read_from_webcam():
         # Break the loop if 'q' is pressed
         #if cv2.waitKey(1) & 0xFF == ord('q'):
         #    break
+        end = time.time()
+        print(f"FPS: {round((1000 * (end - start)), 2)}")
     
     cap.release()
     cv2.destroyAllWindows()
