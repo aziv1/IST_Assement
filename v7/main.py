@@ -1,9 +1,10 @@
+
+
 import tensorflow as tf
 import cv2
 import numpy as np
 import time
 from rpi_lcd import LCD
-import psutil
 from signal import signal, SIGTERM, SIGHUP, pause
 
 # Load the Model
@@ -32,27 +33,24 @@ def read_from_webcam():
         if not ret:
             print("Failed to grab frame")
             break
-        
+
         # Preprocess the frame
         processed_frame = preprocess_image(frame)
-        
+
         # Perform inference
         detect(processed_frame, model, lcd)
-        
+
         # Break the loop if 'q' is pressed
         #if cv2.waitKey(1) & 0xFF == ord('q'):
         #    break
         end = time.time()
         print(f"FPS: {round((1000 * (end - start)), 2)}")
-    
+
     cap.release()
 
 def safe_exit(signum, frame):
     exit(1)
 
-def get_cpu_temperature():
-    temperature = psutil.sensors_temperatures()['cpu-thermal'][0].current
-    return temperature
 
 # Function to perform detection
 def detect(image, model, lcd):
@@ -61,7 +59,7 @@ def detect(image, model, lcd):
     predictions = model.predict(image)
 
     print(predictions)
-    
+
     detected_class_index = np.argmax(predictions)
     class_names = ["Apple", "Banana", "3", "4", "5", "Lemon", "Orange", "8", "9", "10", "11", "12", "13", "14", "15"]
     detected_class = class_names[detected_class_index]
@@ -70,11 +68,7 @@ def detect(image, model, lcd):
 
     #LCD DEBUGGING
     end = time.time()
-<<<<<<< HEAD
-    lcd.text(f"FPS: {round((1000 * (end - start)), 2)} {round(get_cpu_temperature())}°C", 1)
-=======
     lcd.text(f"FPS: {round((1000 * (end - start)), 2)} ", 1)
->>>>>>> 0108ab7bb9d47dfc8bf4bfa62d29861db5ad2302
     lcd.text(f"Seen: {class_names[detected_class_index]}", 2)
 
 # Call the function to read from webcam
