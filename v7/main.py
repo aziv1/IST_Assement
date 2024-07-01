@@ -36,25 +36,23 @@ def read_from_webcam():
         processed_frame = preprocess_image(frame)
         
         # Perform inference
-        detect(processed_frame, model, lcd, start, end)
+        detect(processed_frame, model, lcd)
         
         # Break the loop if 'q' is pressed
         #if cv2.waitKey(1) & 0xFF == ord('q'):
         #    break
         end = time.time()
         print(f"FPS: {round((1000 * (end - start)), 2)}")
-
-        
     
     cap.release()
-    cv2.destroyAllWindows()
 
 def safe_exit(signum, frame):
     exit(1)
 
 
 # Function to perform detection
-def detect(image, model, lcd, start, end):
+def detect(image, model, lcd):
+    start = time.time()
     # Perform inference
     predictions = model.predict(image)
 
@@ -67,6 +65,7 @@ def detect(image, model, lcd, start, end):
     print(f"Detected: {detected_class}")
 
     #LCD DEBUGGING
+    end = time.time()
     lcd.text(f"FPS: {round((1000 * (end - start)), 2)} ")
     lcd.text(f"Seen: {class_names[detected_class_index]}")
 
