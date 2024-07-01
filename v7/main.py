@@ -1,11 +1,10 @@
-
-
 import tensorflow as tf
 import cv2
 import numpy as np
 import time
 from rpi_lcd import LCD
 from signal import signal, SIGTERM, SIGHUP, pause
+import psutil
 
 # Load the Model
 model = tf.keras.models.load_model("Model.h5")
@@ -51,6 +50,9 @@ def read_from_webcam():
 def safe_exit(signum, frame):
     exit(1)
 
+def get_cpu_temperature():
+    temperature = psutil.sensors_temperatures()['cpu-thermal'][0].current
+    return temperature
 
 # Function to perform detection
 def detect(image, model, lcd):
@@ -68,7 +70,8 @@ def detect(image, model, lcd):
 
     #LCD DEBUGGING
     end = time.time()
-    lcd.text(f"FPS: {round((1000 * (end - start)), 2)} ", 1)
+    cpu_temperature = get_cpu_temperature()
+    lcd.text(f"FPS: {round((1000 * (end - start)), 2)} {round(cpu_temperature, 1)}°C", 1)
     lcd.text(f"Seen: {class_names[detected_class_index]}", 2)
 
 # Call the function to read from webcam
