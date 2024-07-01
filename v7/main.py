@@ -3,6 +3,7 @@ import cv2
 import numpy as np
 import time
 from rpi_lcd import LCD
+import psutil
 from signal import signal, SIGTERM, SIGHUP, pause
 
 # Load the Model
@@ -49,6 +50,9 @@ def read_from_webcam():
 def safe_exit(signum, frame):
     exit(1)
 
+def get_cpu_temperature():
+    temperature = psutil.sensors_temperatures()['cpu-thermal'][0].current
+    return temperature
 
 # Function to perform detection
 def detect(image, model, lcd):
@@ -66,8 +70,8 @@ def detect(image, model, lcd):
 
     #LCD DEBUGGING
     end = time.time()
-    lcd.text(f"FPS: {round((1000 * (end - start)), 2)} ")
-    lcd.text(f"Seen: {class_names[detected_class_index]}")
+    lcd.text(f"FPS: {round((1000 * (end - start)), 2)} {round(get_cpu_temperature())}°C", 1)
+    lcd.text(f"Seen: {class_names[detected_class_index]}", 2)
 
 # Call the function to read from webcam
 read_from_webcam()
