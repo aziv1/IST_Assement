@@ -18,7 +18,7 @@ def preprocess_image(image):
     return input_img
 
 # Function to read image from webcam
-def read_from_webcam():
+def read_from_picamera():
     #Pi Camera Support
     picam2 = Picamera2()
     picam2.configure(picam2.create_preview_configuration(main={"format": 'XRGB8888', "size": (640, 480)}))
@@ -33,7 +33,7 @@ def read_from_webcam():
     while True:
         # Non-Picamera Stuff
         frame = picam2.capture_array()   # Read a frame from the webcam
-        
+
         # Preprocess the frame
         processed_frame = preprocess_image(frame)
 
