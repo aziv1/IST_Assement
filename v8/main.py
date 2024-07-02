@@ -19,7 +19,8 @@ def preprocess_image(image):
 
 # Function to read image from webcam
 def read_from_webcam():
-    cap = cv2.VideoCapture(0)  # Open the webcam (change the number based on your camera setup)
+    # Open the webcam (change the number based on your camera setup)
+    cap = picam2.capture_array()  
 
     #LCD DEBUGGING
     lcd = LCD()
@@ -34,11 +35,10 @@ def read_from_webcam():
 
     while True:
         # Non-Picamera Stuff
-        #ret, frame = cap.read()  # Read a frame from the webcam
-        #if not ret:
-        #    print("Failed to grab frame")
-        #    break
-        frame = picam2.capture_array()
+        ret, frame = cap.read()  # Read a frame from the webcam
+        if not ret:
+            print("Failed to grab frame")
+            break
 
         # Preprocess the frame
         processed_frame = preprocess_image(frame)
