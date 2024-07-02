@@ -32,11 +32,8 @@ def read_from_webcam():
 
     while True:
         # Non-Picamera Stuff
-        ret, frame = picam2.capture_array()   # Read a frame from the webcam
-        if not ret:
-            print("Failed to grab frame")
-            break
-
+        frame = picam2.capture_array()   # Read a frame from the webcam
+        
         # Preprocess the frame
         processed_frame = preprocess_image(frame)
 
