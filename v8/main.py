@@ -24,9 +24,6 @@ def read_from_webcam():
     picam2.configure(picam2.create_preview_configuration(main={"format": 'XRGB8888', "size": (640, 480)}))
     picam2.start()
 
-    # Open the webcam (change the number based on your camera setup)
-    cap = picam2.capture_array()  
-
     #LCD DEBUGGING
     lcd = LCD()
 
@@ -35,7 +32,7 @@ def read_from_webcam():
 
     while True:
         # Non-Picamera Stuff
-        ret, frame = cap.read()  # Read a frame from the webcam
+        ret, frame = picam2.capture_array()   # Read a frame from the webcam
         if not ret:
             print("Failed to grab frame")
             break
