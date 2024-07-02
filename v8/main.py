@@ -64,7 +64,7 @@ def detect(image, model, lcd):
     #LCD DEBUGGING
     end = time.time()
     cpu_temperature = get_cpu_temperature()
-    lcd.text(f"FPS: {round((1000 * (end - start)), 2)} {round(cpu_temperature, 1)}°C", 1)
+    lcd.text(f"FPS: {round((1000 * (end - start)), 2)} {round(cpu_temperature, 1)}C", 1)
     lcd.text(f"Seen: {class_names[detected_class_index]}", 2)
 
 # Call the function to read from webcam
