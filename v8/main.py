@@ -44,7 +44,7 @@ def safe_exit(signum, frame):
     exit(1)
 
 def get_cpu_temperature():
-    temperature = psutil.sensors_temperatures()['cpu-thermal'][0].current
+    temperature = psutil.sensors_temperatures()['cpu_thermal'][0].current
     return temperature
 
 # Function to perform detection
