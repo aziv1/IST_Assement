@@ -56,7 +56,7 @@ def detect(image, model, lcd):
     print(predictions)
 
     detected_class_index = np.argmax(predictions)
-    class_names = ["Apple", "Banana", "3", "4", "5", "Lemon", "Orange", "8", "9", "10", "11", "12", "13", "14", "15"]
+    class_names = ["Apple", "Banana", "Carambola", "Guava", "Kiwi", "Mango", "Orange", "Peach", "Pear", "Persimmon", "Pitaya", "Plum", "Pomegranate", "Tomatoes", "Muskmelon"]
     detected_class = class_names[detected_class_index]
 
     print(f"Detected: {detected_class}")
