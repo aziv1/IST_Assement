@@ -67,5 +67,8 @@ def detect(image, model, lcd):
     lcd.text(f"FPS: {round((1000 * (end - start)), 2)} {round(cpu_temperature, 1)}C", 1)
     lcd.text(f"Seen: {class_names[detected_class_index]}", 2)
 
+def encode(detected_class_index):
+    print(detected_class_index)
+
 # Call the function to read from webcam
 read_from_webcam()
