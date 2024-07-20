@@ -31,6 +31,8 @@ def read_from_webcam():
     signal(SIGTERM, safe_exit)
     signal(SIGHUP, safe_exit)
 
+    lines = init_gpio()
+
     while True:
         # Non-Picamera Stuff
         frame = picam2.capture_array()   # Read a frame from the webcam
@@ -39,7 +41,7 @@ def read_from_webcam():
         processed_frame = preprocess_image(frame)
 
         # Perform inference
-        detect(processed_frame, model, lcd)
+        detect(processed_frame, model, lcd, lines)
 
 def safe_exit(signum, frame):
     exit(1)
@@ -49,7 +51,7 @@ def get_cpu_temperature():
     return temperature
 
 # Function to perform detection
-def detect(image, model, lcd):
+def detect(image, model, lcd, lines):
     start = time.time()
     # Perform inference
     predictions = model.predict(image)
@@ -68,7 +70,7 @@ def detect(image, model, lcd):
     lcd.text(f"FPS: {round((1000 * (end - start)), 2)} {round(cpu_temperature, 1)}C", 1)
     lcd.text(f"Seen: {class_names[detected_class_index]}", 2)
 
-    encode(detected_class_index)
+    encode(detected_class_index, lines)
 
 def init_gpio():
     chip = gpiod.Chip('gpiochip0')
