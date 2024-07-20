@@ -6,7 +6,7 @@ from rpi_lcd import LCD
 from signal import signal, SIGTERM, SIGHUP, pause
 import psutil
 from picamera2 import Picamera2
-import gpiozero
+from gpiozero import LED
 
 # Load the Model
 model = tf.keras.models.load_model("Model.h5")
@@ -30,15 +30,12 @@ def read_from_webcam():
 
     signal(SIGTERM, safe_exit)
     signal(SIGHUP, safe_exit)
-
     
+    #GPIO
+    # 19 = 8, 16 = 4
+    # 26 = 2, 20 = 1 
+    gpio_pins = [LED(19), LED(16), LED(26), LED(20)]
 
-    # Request each GPIO line
-    for line_num in gpio_lines:
-        line = chip.get_line(line_num)
-        line.request(line_request)
-        lines.append(line)
-    
     while True:
         # Non-Picamera Stuff
         frame = picam2.capture_array()   # Read a frame from the webcam
@@ -47,7 +44,7 @@ def read_from_webcam():
         processed_frame = preprocess_image(frame)
         
         # Perform inference
-        detect(processed_frame, model, lcd, lines)
+        detect(processed_frame, model, lcd, gpio_pins)
 
 def safe_exit(signum, frame):
     exit(1)
@@ -57,7 +54,7 @@ def get_cpu_temperature():
     return temperature
 
 # Function to perform detection
-def detect(image, model, lcd, lines):
+def detect(image, model, lcd, gpio_pins):
     start = time.time()
     # Perform inference
     predictions = model.predict(image)
@@ -76,9 +73,9 @@ def detect(image, model, lcd, lines):
     lcd.text(f"FPS: {round((1000 * (end - start)), 2)} {round(cpu_temperature, 1)}C", 1)
     lcd.text(f"Seen: {class_names[detected_class_index]}", 2)
 
-    encode(detected_class_index, lines)
+    encode(detected_class_index, gpio_pins)
 
-def encode(detected_class_index, lines):
+def encode(detected_class_index, gpio_pins):
     if detected_class_index < 0 or detected_class_index > 15:
         raise ValueError("Input is out of range 1 -> 15")
     
@@ -86,11 +83,11 @@ def encode(detected_class_index, lines):
 
     for i, bit in enumerate(binary_string):
         if bit == '1':
-            lines[i].setValue(1)
-            print(f"GPIO {i} set to {1}")
+            gpio_pins[i].on()
+            print(f"Set {gpio_pins[i]} to 1")
         else:
-            lines[i].setValue(0)
-            print(f"GPIO {i} set to {0}")
+            gpio_pins[i].off()
+            print(f"Set {gpio_pins[i]} to 0")
 
 # Call the function to read from webcam
 read_from_webcam()
