@@ -31,7 +31,7 @@ def read_from_webcam():
     signal(SIGTERM, safe_exit)
     signal(SIGHUP, safe_exit)
 
-    chip = gpiod.Chip('gpiochip4')
+    chip = gpiod.Chip('/dev/gpiochip4')
     # 19, 16
     # 26, 20 
     gpio_lines = [19, 16, 16, 20] #8, 4, 2, 1 - BIN
