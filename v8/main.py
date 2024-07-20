@@ -31,7 +31,13 @@ def read_from_webcam():
     signal(SIGTERM, safe_exit)
     signal(SIGHUP, safe_exit)
 
-    lines = init_gpio()
+    chip = gpiod.Chip('gpiochip4')
+    # 19, 16
+    # 26, 20 
+    gpio_lines = [19, 16, 16, 20] #8, 4, 2, 1 - BIN
+    lines = [chip.get_line(line) for line in gpio_lines]
+    for line in lines:
+        line.request(consumer='ai', type=gpiod.LINE_REQ_DIR_OUT)
 
     while True:
         # Non-Picamera Stuff
@@ -71,15 +77,6 @@ def detect(image, model, lcd, lines):
     lcd.text(f"Seen: {class_names[detected_class_index]}", 2)
 
     encode(detected_class_index, lines)
-
-def init_gpio():
-    chip = gpiod.Chip('gpiochip0')
-    # 19 = 8, 16 = 4
-    # 26 = 2, 20 = 1
-    lines = chip.lines([19, 16, 26, 20])  # Example GPIO numbers, change as needed
-    lines.request(consumer='ai', type=gpiod.LINE_REQ_DIR_OUT)
-
-    return lines
 
 def encode(detected_class_index, lines):
     if detected_class_index < 0 or detected_class_index > 15:
