@@ -6,7 +6,7 @@ from rpi_lcd import LCD
 from signal import signal, SIGTERM, SIGHUP, pause
 import psutil
 from picamera2 import Picamera2
-import gpiod
+import gpiozero
 
 # Load the Model
 model = tf.keras.models.load_model("Model.h5")
@@ -31,12 +31,7 @@ def read_from_webcam():
     signal(SIGTERM, safe_exit)
     signal(SIGHUP, safe_exit)
 
-    chip = gpiod.Chip('/dev/gpiochip4')
-    # 19, 16
-    # 26, 20 
-    gpio_lines = [19, 16, 16, 20] #8, 4, 2, 1 - BIN
-    line_request = gpiod.LineRequest(consumer='my_program', type=gpiod.LINE_REQ_DIR_OUT)
-    lines = []
+    
 
     # Request each GPIO line
     for line_num in gpio_lines:
