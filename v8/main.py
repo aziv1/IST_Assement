@@ -35,17 +35,22 @@ def read_from_webcam():
     # 19, 16
     # 26, 20 
     gpio_lines = [19, 16, 16, 20] #8, 4, 2, 1 - BIN
-    lines = [chip.get_line(line) for line in gpio_lines]
-    for line in lines:
-        line.request(consumer='ai', type=gpiod.LINE_REQ_DIR_OUT)
+    line_request = gpiod.LineRequest(consumer='my_program', type=gpiod.LINE_REQ_DIR_OUT)
+    lines = []
 
+    # Request each GPIO line
+    for line_num in gpio_lines:
+        line = chip.get_line(line_num)
+        line.request(line_request)
+        lines.append(line)
+    
     while True:
         # Non-Picamera Stuff
         frame = picam2.capture_array()   # Read a frame from the webcam
         frame = cv2.cvtColor(frame, cv2.COLOR_RGB2BGR)
         # Preprocess the frame
         processed_frame = preprocess_image(frame)
-
+        
         # Perform inference
         detect(processed_frame, model, lcd, lines)
 
