@@ -6,6 +6,7 @@ from rpi_lcd import LCD
 from signal import signal, SIGTERM, SIGHUP, pause
 import psutil
 from picamera2 import Picamera2
+import gpiod
 
 # Load the Model
 model = tf.keras.models.load_model("Model.h5")
@@ -69,8 +70,28 @@ def detect(image, model, lcd):
 
     encode(detected_class_index)
 
-def encode(detected_class_index):
-    print(detected_class_index)
+def init_gpio():
+    chip = gpiod.Chip('gpiochip0')
+    # 19 = 8, 16 = 4
+    # 26 = 2, 20 = 1
+    lines = chip.lines([19, 16, 26, 20])  # Example GPIO numbers, change as needed
+    lines.request(consumer='ai', type=gpiod.LINE_REQ_DIR_OUT)
+
+    return lines
+
+def encode(detected_class_index, lines):
+    if detected_class_index < 0 or detected_class_index > 15:
+        raise ValueError("Input is out of range 1 -> 15")
+    
+    binary_string = format(detected_class_index, '04b') #Convert to 4bit binary string
+
+    for i, bit in enumerate(binary_string):
+        if bit == '1':
+            lines[i].setValue(1)
+            print(f"GPIO {i} set to {1}")
+        else:
+            lines[i].setValue(0)
+            print(f"GPIO {i} set to {0}")
 
 # Call the function to read from webcam
 read_from_webcam()
