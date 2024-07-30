@@ -1,9 +1,9 @@
 from gpiozero import LED
 
-eight = gp.LED(19)
-four = gp.LED(16)
-two = gp.LED(26)
-one = gp.LED(20)
+eight = LED(19)
+four = LED(16)
+two = LED(26)
+one = LED(20)
 
 gpio_pins = [LED(19), LED(16), LED(26), LED(20)]
 
