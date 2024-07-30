@@ -1,10 +1,5 @@
 from gpiozero import LED
 
-eight = LED(19)
-four = LED(16)
-two = LED(26)
-one = LED(20)
-
 gpio_pins = [LED(19), LED(16), LED(26), LED(20)]
 
 while True:
