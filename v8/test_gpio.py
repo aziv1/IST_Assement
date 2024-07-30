@@ -1,21 +1,24 @@
-import gpiozero as gp
+from gpiozero import LED
 
 eight = gp.LED(19)
 four = gp.LED(16)
 two = gp.LED(26)
 one = gp.LED(20)
 
-try:
-    eight.on()
-    four.on()
-    two.on()
-    one.on()
-    print("Eight, Four, Two, One ON")
-    eight.off()
-    four.off()
-    two.off()
-    one.off()
-    print("Eight, Four, Two, One OFF")
-except Exception as e:
-    print("Error:", e)
-    gp.close()
+gpio_pins = [LED(19), LED(16), LED(26), LED(20)]
+
+while True:
+    number = int(input("Enter Number: "))
+    if number >= 16 or number < 0:
+        print("Invalid Number Entered")
+    else:
+        binary_string = format(number, '04b') #Convert to 4bit binary string
+
+        for i, bit in enumerate(binary_string):
+            if bit == '1':
+                gpio_pins[i].on()
+                print(f"Set {gpio_pins[i]} to 1")
+            else:
+                gpio_pins[i].off()
+                print(f"Set {gpio_pins[i]} to 0")
+        print(f"Exported Number {number}")
