@@ -73,7 +73,7 @@ def detect(image, model, lcd, gpio_pins):
 
     #Returns Float Confidence Of Highest Value
     print(detected_confidence)
-    if detected_confidence >= 7.5e1:
+    if float(detected_confidence) >= 7.5e1:
         encode(detected_class_index, gpio_pins)
         print(f"Detected: {detected_class}")
     else:
