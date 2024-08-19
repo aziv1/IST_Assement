@@ -69,8 +69,9 @@ def detect(image, model, lcd, gpio_pins):
     confidence = confidence.replace("[[", "")
     confidence = confidence.replace("]]", "")
     confidence = confidence.split(" ")
+    detected = confidence.max()
 
-    print(confidence)
+    print(detected)
 
     print(f"Detected: {detected_class}")
 
