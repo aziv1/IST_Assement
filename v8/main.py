@@ -65,8 +65,8 @@ def detect(image, model, lcd, gpio_pins):
     class_names = ["Apple", "Banana", "Carambola", "Guava", "Kiwi", "Mango", "Orange", "Peach", "Pear", "Persimmon", "Pitaya", "Plum", "Pomegranate", "Tomatoes", "Muskmelon"]
     detected_class = class_names[detected_class_index]
 
-    confidence = str(predictions).replace("[", "")
-    confidence = str(predictions).replace("]", "")
+    confidence = str(predictions).replace("[[", "")
+    confidence = str(predictions).replace("]]", "")
 
     print(confidence)
 
