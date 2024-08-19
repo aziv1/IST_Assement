@@ -66,8 +66,8 @@ def detect(image, model, lcd, gpio_pins):
     detected_class = class_names[detected_class_index]
 
     confidence = str(predictions)
-    confidence = predictions.replace("[[", "")
-    confidence = predictions.replace("]]", "")
+    confidence = confidence.replace("[[", "")
+    confidence = confidence.replace("]]", "")
     confidence = confidence.split(" ")
 
     print(confidence)
