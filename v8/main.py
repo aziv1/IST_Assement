@@ -69,11 +69,15 @@ def detect(image, model, lcd, gpio_pins):
     confidence = confidence.replace("[[", "")
     confidence = confidence.replace("]]", "")
     confidence = confidence.split(" ")
-    detected = max(confidence)
+    detected_confidence = max(confidence)
 
-    print(detected)
-
-    print(f"Detected: {detected_class}")
+    #Returns Float Confidence Of Highest Value
+    print(detected_confidence)
+    if detected_confidence >= 7.5e1:
+        encode(detected_class_index, gpio_pins)
+        print(f"Detected: {detected_class}")
+    else:
+        pass
 
     #LCD DEBUGGING
     end = time.time()
@@ -81,7 +85,7 @@ def detect(image, model, lcd, gpio_pins):
     lcd.text(f"FPS: {round((1000 * (end - start)), 2)} {round(cpu_temperature, 1)}C", 1)
     lcd.text(f"Seen: {class_names[detected_class_index]}", 2)
 
-    encode(detected_class_index, gpio_pins)
+    
 
 def encode(detected_class_index, gpio_pins):
     if detected_class_index < 0 or detected_class_index > 15:
